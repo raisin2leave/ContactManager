@@ -8,7 +8,6 @@ public class Organization : Contact
     public string? Website { get; set; }
     public string? Mission { get; set; }
     
-    // Navigation properties based on UML
     public List<Person> Members { get; set; } = new();
     public Person? PrimaryContact { get; set; }
 
