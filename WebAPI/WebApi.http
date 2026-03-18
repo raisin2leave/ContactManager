@@ -1,0 +1,49 @@
+### Variables
+@Host = http://localhost:5022
+@ContactId = 00000000-0000-0000-0000-000000000000
+
+### 1. GET all people (Check if Adam Nowak is there)
+GET {{Host}}/api/contacts?page=1&size=10
+Accept: application/json
+
+### 2. GET specific person (Replace @ContactId with one from the list above)
+GET {{Host}}/api/contacts/{{ContactId}}
+Accept: application/json
+
+### 3. POST - Create a valid person
+POST {{Host}}/api/contacts
+Content-Type: application/json
+
+{
+    "firstName": "Jan",
+    "lastName": "Kowalski",
+    "email": "jan.kowalski@wsei.edu.pl",
+    "phone": "48 500 600 700",
+    "gender": 0,
+    "birthDate": "1995-05-15T00:00:00Z"
+}
+
+### 4. POST - Test Validation (Should return 400 Bad Request)
+# This will fail because: Email is invalid, FirstName is empty, and Age < 18
+POST {{Host}}/api/contacts
+Content-Type: application/json
+
+{
+    "firstName": "",
+    "lastName": "TooYoung",
+    "email": "wrong-email-format",
+    "phone": "123",
+    "gender": 0,
+    "birthDate": "2025-01-01T00:00:00Z"
+}
+
+### 5. PUT - Update existing person
+PUT {{Host}}/api/contacts/{{ContactId}}
+Content-Type: application/json
+
+{
+    "firstName": "Adam",
+    "lastName": "Nowak-Updated",
+    "email": "adam.updated@example.com",
+    "status": 2
+}

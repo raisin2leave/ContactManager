@@ -2,43 +2,45 @@ using AppCore.Dto;
 using AppCore.Entities;
 using AppCore.Repositories;
 using AppCore.Services;
+using AutoMapper;
 
 namespace Infrastructure.Services;
 
-public class MemoryPersonService(IContactUnitOfWork unitOfWork) : IPersonService
+public class MemoryPersonService(IContactUnitOfWork unitOfWork, IMapper mapper) : IPersonService
 {
     public async Task<PagedResult<PersonDto>> FindAllPeoplePaged(int page, int size)
     {
-        var peoplePaged = await unitOfWork.Persons.FindPagedAsync(page, size);
-        var dtoItems = peoplePaged.Items.Select(PersonDto.FromEntity).ToList();
-        
-        return new PagedResult<PersonDto>(dtoItems, peoplePaged.TotalCount, peoplePaged.Page, peoplePaged.PageSize);
+        var result = await unitOfWork.Persons.FindPagedAsync(page, size);
+        var items = mapper.Map<List<PersonDto>>(result.Items);
+        return new PagedResult<PersonDto>(items, result.TotalCount, result.Page, result.PageSize);
     }
 
-    public async Task<PersonDto?> FindById(Guid id)
+    public async Task<Person> AddPerson(CreatePersonDto personDto)
     {
-        var person = await unitOfWork.Persons.FindByIdAsync(id);
-        return person != null ? PersonDto.FromEntity(person) : null;
-    }
-
-    public async Task<PersonDto> CreatePerson(CreatePersonDto dto)
-    {
-        var person = new Person
-        {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            Email = dto.Email,
-            Phone = dto.Phone,
-            Gender = dto.Gender,
-            Position = dto.Position,
-            BirthDate = dto.BirthDate
-        };
-        
-        var saved = await unitOfWork.Persons.AddAsync(person);
+        var entity = mapper.Map<Person>(personDto);
+        var result = await unitOfWork.Persons.AddAsync(entity);
         await unitOfWork.SaveChangesAsync();
-        return PersonDto.FromEntity(saved);
+        return result;
     }
 
-    public async Task UpdatePerson(Guid id, UpdatePersonDto dto) => throw new NotImplementedException();
-    public async Task DeletePerson(Guid id) => await unitOfWork.Persons.RemoveByIdAsync(id);
+    public async Task<Person> UpdatePerson(Guid id, UpdatePersonDto personDto)
+    {
+        var entity = await unitOfWork.Persons.FindByIdAsync(id) ?? throw new KeyNotFoundException();
+        mapper.Map(personDto, entity);
+        var result = await unitOfWork.Persons.UpdateAsync(entity);
+        await unitOfWork.SaveChangesAsync();
+        return result;
+    }
+
+    public async Task<PersonDto?> GetById(Guid id)
+    {
+        var entity = await unitOfWork.Persons.FindByIdAsync(id);
+        return entity != null ? mapper.Map<PersonDto>(entity) : null;
+    }
+
+    public async Task<IEnumerable<PersonDto>> FindPeopleFromCompany(Guid companyId)
+    {
+        var items = await unitOfWork.Persons.GetByEmployerAsync(companyId);
+        return mapper.Map<IEnumerable<PersonDto>>(items);
+    }
 }

@@ -1,22 +1,43 @@
+using AppCore.Dto;
 using AppCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Controllers;
+namespace WebApi.Controllers;
 
 [ApiController]
-[Route("api/contacts")]
+[Route("/api/contacts")]
 public class ContactsController(IPersonService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllPersons([FromQuery] int page = 1, [FromQuery] int size = 10)
+    public async Task<IActionResult> GetAllPersons(int page = 1, int size = 10) =>
+        Ok(await service.FindAllPeoplePaged(page, size));
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetPerson(Guid id)
     {
-        return Ok(await service.FindAllPeoplePaged(page, size));
+        var dto = await service.GetById(id);
+        if (dto == null) return NotFound();
+        return Ok(dto);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpPost]
+    public async Task<IActionResult> Create(CreatePersonDto dto)
     {
-        var person = await service.FindById(id);
-        return person == null ? NotFound() : Ok(person);
+        var result = await service.AddPerson(dto);
+        return CreatedAtAction(nameof(GetPerson), new { id = result.Id }, result);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, UpdatePersonDto dto)
+    {
+        try
+        {
+            var result = await service.UpdatePerson(id, dto);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

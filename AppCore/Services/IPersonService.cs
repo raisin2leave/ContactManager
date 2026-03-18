@@ -1,12 +1,13 @@
 using AppCore.Dto;
+using AppCore.Entities;
 
 namespace AppCore.Services;
 
 public interface IPersonService
 {
     Task<PagedResult<PersonDto>> FindAllPeoplePaged(int page, int size);
-    Task<PersonDto?> FindById(Guid id);
-    Task<PersonDto> CreatePerson(CreatePersonDto dto);
-    Task UpdatePerson(Guid id, UpdatePersonDto dto);
-    Task DeletePerson(Guid id);
+    Task<IEnumerable<PersonDto>> FindPeopleFromCompany(Guid companyId);
+    Task<Person> AddPerson(CreatePersonDto personDto);
+    Task<Person> UpdatePerson(Guid id, UpdatePersonDto personDto);
+    Task<PersonDto?> GetById(Guid id);
 }
