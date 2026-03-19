@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers;
 
 [ApiController]
-[Route("/api/contacts")]
+[Route("api/contacts")]
 public class ContactsController(IPersonService service) : ControllerBase
 {
     [HttpGet]

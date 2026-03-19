@@ -12,22 +12,14 @@ public static class ContactsModule
 {
     public static IServiceCollection AddContactsModule(this IServiceCollection services, IConfiguration configuration)
     {
-        // 1. Validators
         services.AddValidatorsFromAssemblyContaining<CreatePersonDtoValidator>();
         services.AddFluentValidationAutoValidation();
-        
-        // 2. UNIVERSAL AUTOMAPPER REGISTRATION
-        // This is foolproof because it doesn't use the ambiguous DI extensions
-        var mapperConfig = new MapperConfiguration(cfg =>
-        {
+   
+        var mapperConfig = new MapperConfiguration(cfg => {
             cfg.AddProfile<ContactsMappingProfile>();
         });
-
-        // We create the mapper instance once
-        IMapper mapper = mapperConfig.CreateMapper();
-
-        // We register that specific instance as a Singleton
-        services.AddSingleton(mapper);
+        
+        services.AddSingleton<IMapper>(mapperConfig.CreateMapper());
         
         return services;
     }
