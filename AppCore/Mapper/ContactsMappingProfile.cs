@@ -17,5 +17,8 @@ public class ContactsMappingProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<Address, AddressDto>().ReverseMap();
+        
+        CreateMap<CreateNoteDto, Note>();
+        CreateMap<Note, NoteDto>();
     }
 }

@@ -14,6 +14,7 @@ public record PersonDto : ContactDtos
     public DateTime? BirthDate { get; init; }
     public Gender Gender { get; init; }
     public Guid? EmployerId { get; init; }
+    public List<NoteDto>? Notes { get; set; } = new();
 }
 
 public record CreatePersonDto(

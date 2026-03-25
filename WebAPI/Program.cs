@@ -16,7 +16,14 @@ builder.Services.AddSingleton<IOrganizationRepository, MemoryOrganizationReposit
 builder.Services.AddSingleton<IContactUnitOfWork, MemoryContactUnitOfWork>();
 builder.Services.AddSingleton<IPersonService, MemoryPersonService>();
 
+builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.MapControllers();
+app.Run();
 
 app.MapControllers();
 
