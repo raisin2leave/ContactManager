@@ -5,14 +5,14 @@ using AppCore.Repositories;
 using AppCore.Services;
 using AutoMapper;
 
-namespace Infrastructure.Services;
+namespace AppCore.Services;
 
-public class MemoryPersonService : IPersonService
+public class PersonService : IPersonService
 {
     private readonly IContactUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public MemoryPersonService(IContactUnitOfWork unitOfWork, IMapper mapper)
+    public PersonService(IContactUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
