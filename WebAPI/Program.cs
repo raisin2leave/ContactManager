@@ -1,32 +1,39 @@
-using AppCore.Modules;
-using AppCore.Services;
-using AppCore.Services;
-using AppCore.Repositories;
+using AppCore.Mapper;
 using Infrastructure;
-using Infrastructure.Memory;
+using Infrastructure.EntityFramework.Context;
+using Microsoft.EntityFrameworkCore;
+using WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. Controllers
 builder.Services.AddControllers();
 
-builder.Services.AddContactsModule(builder.Configuration);
+// 2. AutoMapper
+builder.Services.AddAutoMapper(typeof(ContactsMappingProfile));
 
-builder.Services.AddSingleton<IPersonRepository, MemoryPersonRepository>();
-builder.Services.AddSingleton<ICompanyRepository, MemoryCompanyRepository>();
-builder.Services.AddSingleton<IOrganizationRepository, MemoryOrganizationRepository>();
-builder.Services.AddSingleton<IContactUnitOfWork, MemoryContactUnitOfWork>();
-builder.Services.AddSingleton<IPersonService, PersonService>();
+// 3. Infrastructure (DbContext, Identity, etc.)
 builder.Services.AddContactsEfModule(builder.Configuration);
 
+// 4. Exception handling
 builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
-app.MapControllers();
-app.Run();
+// 🔥 THIS FIXES YOUR ERROR
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
 
+    // Optional (DEV ONLY - reset DB every run)
+    // db.Database.EnsureDeleted();
+
+    db.Database.Migrate();
+}
+
+// 5. Middleware
+app.UseExceptionHandler();
 app.MapControllers();
 
 app.Run();
