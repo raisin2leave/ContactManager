@@ -1,20 +1,43 @@
 ### Variables
 @Host = http://localhost:5022
 @ContactId = 3d54091d-abc8-49ec-9590-93ad3ed5458f
-//00000000-0000-0000-0000-000000000000
 @NoteId = 00000000-0000-0000-0000-000000000000
 
-### 1. GET all people (Check if Adam Nowak is there)
+# NEW: Security Variables
+@AdminEmail = admin@crm.pl
+@AdminPassword = Admin@123!
+
+# AUTHENTICATION 
+
+### 0. Login - Get the JWT Token
+# @name login
+POST {{Host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{AdminEmail}}",
+  "password": "{{AdminPassword}}"
+}
+
+### Capture the token from the response
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW4iLCJkZXBhcnRtZW50IjoiSVQiLCJzdGF0dXMiOiJBY3RpdmUiLCJqdGkiOiJiMDkxYzA5Zi0yOTdiLTQzNDgtYTExZS03Y2M2Y2U2NWI5ODQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzc2MjQ1NDk2LCJpc3MiOiJJZGVpc0NybUFwaSIsImF1ZCI6IkNybUNsaWVudCJ9.4AFCHpXXZVcBO98A377NImlJWClJD_6pmFCXDwBXBh0
+
+
+
+### 1. GET all people
 GET {{Host}}/api/contacts?page=1&size=10
 Accept: application/json
+Authorization: Bearer {{Token}}
 
-### 2. GET specific person (Replace @ContactId with one from the list above)
+### 2. GET specific person
 GET {{Host}}/api/contacts/{{ContactId}}
 Accept: application/json
+Authorization: Bearer {{Token}}
 
 ### 3. POST - Create a valid person
 POST {{Host}}/api/contacts
 Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
   "firstName": "Jan",
@@ -25,9 +48,48 @@ Content-Type: application/json
   "birthDate": "1995-05-15T00:00:00Z"
 }
 
-### 4. POST - Test Validation (Should return 400 Bad Request)
+### 4. PUT - Update existing person
+PUT {{Host}}/api/contacts/{{ContactId}}
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "firstName": "Adam",
+  "lastName": "Nowak-Updated",
+  "email": "adam.updated@example.com",
+  "status": 2
+}
+
+
+### 5. POST - Add a note to a person 
+POST {{Host}}/api/contacts/{{ContactId}}/notes
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "content": "This is a new test note created in Lab 7"
+}
+
+### 6. GET - Get all notes for a person 
+# Use this to find the NoteId for the delete task below!
+GET {{Host}}/api/contacts/{{ContactId}}/notes
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+### 7. DELETE - Remove a note
+# Replace NoteId at the top with a real ID from request #6
+DELETE {{Host}}/api/contacts/{{ContactId}}/notes/{{NoteId}}
+Authorization: Bearer {{Token}}
+
+# ==========================================
+# ⚠️ VALIDATION & ERROR HANDLING
+# ==========================================
+
+### 8. POST - Test Validation (Should return 400 Bad Request)
+# We still need the token, otherwise we get 401 instead of 400
 POST {{Host}}/api/contacts
 Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
   "firstName": "",
@@ -38,40 +100,16 @@ Content-Type: application/json
   "birthDate": "2025-01-01T00:00:00Z"
 }
 
-### 5. PUT - Update existing person
-PUT {{Host}}/api/contacts/{{ContactId}}
-Content-Type: application/json
-
-{
-  "firstName": "Adam",
-  "lastName": "Nowak-Updated",
-  "email": "adam.updated@example.com",
-  "status": 2
-}
-
-
-### 6. POST - Add a note to a person 
-POST {{Host}}/api/contacts/{{ContactId}}/notes
-Content-Type: application/json
-
-{
-  "content": "This is a new test note created in Lab 5"
-}
-
-### 7. GET - Get all notes for a person 
-# Use this to find the NoteId for the delete task below!
-GET {{Host}}/api/contacts/{{ContactId}}/notes
-Accept: application/json
-
-### 8. POST - Test Global Exception Handler 
+### 9. POST - Test Global Exception Handler 
 # Send a note to a fake ID to see the ProblemDetails response
 POST {{Host}}/api/contacts/00000000-0000-0000-0000-000000000000/notes
 Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
   "content": "This should trigger ContactNotFoundException"
 }
 
-### 9. DELETE - Remove a note
-# Replace NoteId at the top with a real ID from request #7
-DELETE {{Host}}/api/contacts/{{ContactId}}/notes/{{NoteId}}
+### 10. GET - Verify Identity (Who am I?)
+GET {{Host}}/api/auth/me
+Authorization: Bearer {{Token}}
