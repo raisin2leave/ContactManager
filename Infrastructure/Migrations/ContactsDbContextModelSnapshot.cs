@@ -177,6 +177,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("TEXT");
 
@@ -513,6 +516,62 @@ namespace Infrastructure.Migrations
                             Gender = "Male",
                             LastName = "Nowak",
                             Position = "Programista"
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "anna.kowalska@wsei.edu.pl",
+                            Phone = "500600700",
+                            Status = "Active",
+                            BirthDate = new DateTime(1998, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmployerId = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
+                            FirstName = "Anna",
+                            Gender = "Female",
+                            LastName = "Kowalska",
+                            Position = "HR Specialist"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2024, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "piotr.zielinski@wsei.edu.pl",
+                            Phone = "700800900",
+                            Status = "Active",
+                            BirthDate = new DateTime(1990, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmployerId = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
+                            FirstName = "Piotr",
+                            Gender = "Male",
+                            LastName = "Zieliński",
+                            Position = "Manager"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "kasia.lewandowska@wsei.edu.pl",
+                            Phone = "111222333",
+                            Status = "Active",
+                            BirthDate = new DateTime(1995, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmployerId = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
+                            FirstName = "Kasia",
+                            Gender = "Female",
+                            LastName = "Lewandowska",
+                            Position = "Designer"
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            CreatedAt = new DateTime(2024, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "marek.wisniewski@wsei.edu.pl",
+                            Phone = "999888777",
+                            Status = "Inactive",
+                            BirthDate = new DateTime(1988, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmployerId = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
+                            FirstName = "Marek",
+                            Gender = "Male",
+                            LastName = "Wiśniewski",
+                            Position = "Support"
                         });
                 });
 
@@ -552,21 +611,48 @@ namespace Infrastructure.Migrations
                             b1.HasData(
                                 new
                                 {
-                                    ContactId = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
+                                    ContactId = new Guid("3d54091d-abc8-49ec-9590-93ad3ed5458f"),
                                     City = "Kraków",
                                     Country = "Poland",
-                                    PostalCode = "31-150",
-                                    Street = "ul. Św. Filipa 17",
+                                    PostalCode = "30-001",
+                                    Street = "ul. Kwiatowa 1",
                                     Type = 0
                                 },
                                 new
                                 {
-                                    ContactId = new Guid("3d54091d-abc8-49ec-9590-93ad3ed5458f"),
-                                    City = "Kraków",
+                                    ContactId = new Guid("11111111-1111-1111-1111-111111111111"),
+                                    City = "Warszawa",
                                     Country = "Poland",
-                                    PostalCode = "25-009",
-                                    Street = "ul. Św. Filipa 17",
-                                    Type = 1
+                                    PostalCode = "00-001",
+                                    Street = "ul. Polna 5",
+                                    Type = 0
+                                },
+                                new
+                                {
+                                    ContactId = new Guid("22222222-2222-2222-2222-222222222222"),
+                                    City = "Gdańsk",
+                                    Country = "Poland",
+                                    PostalCode = "80-001",
+                                    Street = "ul. Długa 10",
+                                    Type = 0
+                                },
+                                new
+                                {
+                                    ContactId = new Guid("33333333-3333-3333-3333-333333333333"),
+                                    City = "Wrocław",
+                                    Country = "Poland",
+                                    PostalCode = "50-001",
+                                    Street = "ul. Leśna 3",
+                                    Type = 0
+                                },
+                                new
+                                {
+                                    ContactId = new Guid("44444444-4444-4444-4444-444444444444"),
+                                    City = "Łódź",
+                                    Country = "Poland",
+                                    PostalCode = "90-001",
+                                    Street = "ul. Słoneczna 9",
+                                    Type = 0
                                 });
                         });
 

@@ -33,4 +33,15 @@ public class CrmUser : IdentityUser, ISystemUser
             DeactivatedAt = now;
         }
     }
+    public bool IsBlocked { get; private set; }
+
+    public void Block()
+    {
+        IsBlocked = true;
+    }
+
+    public void Unblock()
+    {
+        IsBlocked = false;
+    }
 }

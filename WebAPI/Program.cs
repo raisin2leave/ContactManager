@@ -17,6 +17,12 @@ builder.Services.AddAutoMapper(typeof(ContactsMappingProfile));
 // 3. Infrastructure (DbContext, Identity, Repositories, etc.)
 builder.Services.AddContactsEfModule(builder.Configuration);
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Administrator"));
+});
+
 // 4. JWT Configuration & Registration
 // We read the settings from appsettings.json and register them
 var jwtSettings = new JwtSettings(builder.Configuration);

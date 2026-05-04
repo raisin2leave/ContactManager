@@ -7,6 +7,9 @@
 @AdminEmail = admin@crm.pl
 @AdminPassword = Admin@123!
 
+@UserId = F5BADE14-6CC8-42A2-9A44-9842DA2D9280
+@Role = Salesperson
+
 # AUTHENTICATION 
 
 ### 0. Login - Get the JWT Token
@@ -20,8 +23,7 @@ Content-Type: application/json
 }
 
 ### Capture the token from the response
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW4iLCJkZXBhcnRtZW50IjoiSVQiLCJzdGF0dXMiOiJBY3RpdmUiLCJqdGkiOiJiMDkxYzA5Zi0yOTdiLTQzNDgtYTExZS03Y2M2Y2U2NWI5ODQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzc2MjQ1NDk2LCJpc3MiOiJJZGVpc0NybUFwaSIsImF1ZCI6IkNybUNsaWVudCJ9.4AFCHpXXZVcBO98A377NImlJWClJD_6pmFCXDwBXBh0
-
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW4iLCJkZXBhcnRtZW50IjoiSVQiLCJzdGF0dXMiOiJBY3RpdmUiLCJqdGkiOiIzN2U2MzUxMy05MWM3LTQ2MGYtOWM5ZS01NmI4OWU4ZjI3YjkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzc3Nzk2NTUyLCJpc3MiOiJJZGVpc0NybUFwaSIsImF1ZCI6IkNybUNsaWVudCJ9.bKTOKlDEH67EZ3T9Lp5hcowJm5si7eREpFnlU8w5-j4
 
 
 ### 1. GET all people
@@ -112,4 +114,32 @@ Authorization: Bearer {{Token}}
 
 ### 10. GET - Verify Identity (Who am I?)
 GET {{Host}}/api/auth/me
+Authorization: Bearer {{Token}}
+
+### 11. ADMIN - Get all users
+GET {{Host}}/api/admin/users
+Authorization: Bearer {{Token}}
+
+### 12. ADMIN - Block user
+POST {{Host}}/api/admin/users/{{UserId}}/block
+Authorization: Bearer {{Token}}
+
+### 13. ADMIN - Unblock user
+POST {{Host}}/api/admin/users/{{UserId}}/unblock
+Authorization: Bearer {{Token}}
+
+### 14. ADMIN - Deactivate user
+POST {{Host}}/api/admin/users/{{UserId}}/deactivate
+Authorization: Bearer {{Token}}
+
+### 15. ADMIN - Activate user
+POST {{Host}}/api/admin/users/{{UserId}}/activate
+Authorization: Bearer {{Token}}
+
+### 16. ADMIN - Assign role
+POST {{Host}}/api/admin/users/{{UserId}}/roles/{{Role}}
+Authorization: Bearer {{Token}}
+
+### 17. ADMIN - Remove role
+DELETE {{Host}}/api/admin/users/{{UserId}}/roles/{{Role}}
 Authorization: Bearer {{Token}}

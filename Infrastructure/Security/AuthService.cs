@@ -23,12 +23,14 @@ public class AuthService(
     {
         var user = await userManager.FindByEmailAsync(dto.Email) 
             ?? throw new Exception("Invalid email or password.");
-
+        
         if (!await userManager.CheckPasswordAsync(user, dto.Password))
         {
             await userManager.AccessFailedAsync(user);
             throw new Exception("Invalid email or password.");
         }
+        if (user.IsBlocked)
+            throw new Exception("Account is blocked.");
 
         if (user.Status != SystemUserStatus.Active) throw new Exception("Account inactive.");
         

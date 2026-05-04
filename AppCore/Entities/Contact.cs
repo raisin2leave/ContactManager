@@ -1,3 +1,5 @@
+using AppCore.ValueObjects;
+
 namespace AppCore.Entities;
 
 public abstract class Contact : EntityBase
