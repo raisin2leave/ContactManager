@@ -23,9 +23,7 @@ Content-Type: application/json
 }
 
 ### Capture the token from the response
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW4iLCJkZXBhcnRtZW50IjoiSVQiLCJzdGF0dXMiOiJBY3RpdmUiLCJqdGkiOiIzN2U2MzUxMy05MWM3LTQ2MGYtOWM5ZS01NmI4OWU4ZjI3YjkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzc3Nzk2NTUyLCJpc3MiOiJJZGVpc0NybUFwaSIsImF1ZCI6IkNybUNsaWVudCJ9.bKTOKlDEH67EZ3T9Lp5hcowJm5si7eREpFnlU8w5-j4
-
-
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW4iLCJkZXBhcnRtZW50IjoiSVQiLCJzdGF0dXMiOiJBY3RpdmUiLCJqdGkiOiJmMWVkZjc1OS0yOTgwLTRkNDAtYTBjNy1kNGRiYWMwOWFiYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzc4MTU4OTM3LCJpc3MiOiJJZGVpc0NybUFwaSIsImF1ZCI6IkNybUNsaWVudCJ9.udb5YEo8AweC1UN_20ru7BNBSRSEP3gog4YN-kQtbt8
 ### 1. GET all people
 GET {{Host}}/api/contacts?page=1&size=10
 Accept: application/json
@@ -83,26 +81,7 @@ Authorization: Bearer {{Token}}
 DELETE {{Host}}/api/contacts/{{ContactId}}/notes/{{NoteId}}
 Authorization: Bearer {{Token}}
 
-# ==========================================
-# ⚠️ VALIDATION & ERROR HANDLING
-# ==========================================
-
-### 8. POST - Test Validation (Should return 400 Bad Request)
-# We still need the token, otherwise we get 401 instead of 400
-POST {{Host}}/api/contacts
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-  "firstName": "",
-  "lastName": "TooYoung",
-  "email": "wrong-email-format",
-  "phone": "123",
-  "gender": 0,
-  "birthDate": "2025-01-01T00:00:00Z"
-}
-
-### 9. POST - Test Global Exception Handler 
+### 8. POST - Test Global Exception Handler 
 # Send a note to a fake ID to see the ProblemDetails response
 POST {{Host}}/api/contacts/00000000-0000-0000-0000-000000000000/notes
 Content-Type: application/json
@@ -112,34 +91,30 @@ Authorization: Bearer {{Token}}
   "content": "This should trigger ContactNotFoundException"
 }
 
-### 10. GET - Verify Identity (Who am I?)
+### 9. GET - Verify Identity (Who am I?)
 GET {{Host}}/api/auth/me
 Authorization: Bearer {{Token}}
 
-### 11. ADMIN - Get all users
-GET {{Host}}/api/admin/users
-Authorization: Bearer {{Token}}
-
-### 12. ADMIN - Block user
+### 10. ADMIN - Block user
 POST {{Host}}/api/admin/users/{{UserId}}/block
 Authorization: Bearer {{Token}}
 
-### 13. ADMIN - Unblock user
+### 11. ADMIN - Unblock user
 POST {{Host}}/api/admin/users/{{UserId}}/unblock
 Authorization: Bearer {{Token}}
 
-### 14. ADMIN - Deactivate user
+### 12. ADMIN - Deactivate user
 POST {{Host}}/api/admin/users/{{UserId}}/deactivate
 Authorization: Bearer {{Token}}
 
-### 15. ADMIN - Activate user
+### 13. ADMIN - Activate user
 POST {{Host}}/api/admin/users/{{UserId}}/activate
 Authorization: Bearer {{Token}}
 
-### 16. ADMIN - Assign role
+### 14. ADMIN - Assign role
 POST {{Host}}/api/admin/users/{{UserId}}/roles/{{Role}}
 Authorization: Bearer {{Token}}
 
-### 17. ADMIN - Remove role
+### 15. ADMIN - Remove role
 DELETE {{Host}}/api/admin/users/{{UserId}}/roles/{{Role}}
 Authorization: Bearer {{Token}}
